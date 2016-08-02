@@ -96,17 +96,18 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   val transactionsTableQ : TableQuery[TransactionsTable] = TableQuery[TransactionsTable]
 
   ////////////////////////////////////////////////////////////////////////
-  //case class Product(id: Long, userId: Long, productTypeId: Long, productQuantity :Long, productConstant: Double, productExponential: Double) extends BaseEntity
+  //case class Product(id: Long, userId: Long, productTypeId: Long, productQuantity :Long, productConstant: Double, productExponential: Double,override val createdAt: java.sql.Timestamp,override val updatedAt: java.sql.Timestamp) extends BaseEntity
+
   //
   class ProductsTable(tag: Tag) extends BaseTable[Product](tag, "products") {
     def userId = column[Long]("wanted_user_id")
     def user = foreignKey("wanted_user_k", userId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def productTypeId = column[Long]("product_type_id")
     def productQuantity = column[Long]("product_quantity")
-    def productConstant = column[Long]("product_constant_")
-    def productExponential = column[Long]("product_exponential")
+    def productConstant = column[Double]("product_constant_")
+    def productExponential = column[Double]("product_exponential")
 
-    def * = (id,userId, productTypeId, productQuantity,createdAt,updatedAt) <> (Product.tupled, Product.unapply)
+    def * = (id,userId, productTypeId, productQuantity,productConstant,productExponential,createdAt,updatedAt) <> (Product.tupled, Product.unapply)
   }
   val productsTableQ : TableQuery[ProductsTable] = TableQuery[ProductsTable]
 //////////////////////////////

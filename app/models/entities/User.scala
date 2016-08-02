@@ -10,4 +10,4 @@ package models.entities
  * @param userType
  * @param marketId
  */
-case class User(id: Long, username: String, mail: String, password: String, userType: String,  marketId : Long) extends BaseEntity
+case class User(id: Long, username: String, mail: String, password: String, userType: String,  marketId : Long,override val createdAt: java.sql.Timestamp,override val updatedAt: java.sql.Timestamp) extends BaseEntity
