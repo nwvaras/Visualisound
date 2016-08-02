@@ -1,8 +1,10 @@
 package models.daos
 
-import models.entities.{Supplier, BaseEntity}
+import javax.inject.{Inject, Singleton}
+
+import models.entities._
 import models.persistence.SlickTables
-import models.persistence.SlickTables.{SuppliersTable, BaseTable}
+import models.persistence.SlickTables.BaseTable
 import play.api.Play
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import slick.backend.DatabaseConfig
@@ -68,5 +70,144 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
   def deleteByFilter[C : CanBeQueryCondition](f:  (T) => C): Future[Int] = {
     db.run(tableQ.withFilter(f).delete)
   }
+
+}
+@Singleton
+class UserDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig.driver.api._
+  import dbConfig.db
+
+  protected val tableQ = SlickTables.usersTableQ
+
+  def all: Future[Seq[User]] = {
+    db.run(tableQ.result)
+  }
+
+  def insert(obj: User): Future[Long] = {
+    db.run(tableQ returning tableQ.map(_.id) += obj)
+  }
+
+
+  def byId(id: Long): Future[Option[User]] = {
+    db.run(tableQ.filter(_.id === id).result.headOption)
+  }
+}
+
+@Singleton
+class MarketDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig.driver.api._
+  import dbConfig.db
+
+  protected val tableQ = SlickTables.marketsTableQ
+
+  def all: Future[Seq[Market]] = {
+    db.run(tableQ.result)
+  }
+
+  def insert(obj: Market): Future[Long] = {
+    db.run(tableQ returning tableQ.map(_.id) += obj)
+  }
+
+
+  def byId(id: Long): Future[Option[Market]] = {
+    db.run(tableQ.filter(_.id === id).result.headOption)
+  }
+}
+
+@Singleton
+class OfferDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig.driver.api._
+  import dbConfig.db
+
+  protected val tableQ = SlickTables.offersTableQ
+
+  def all: Future[Seq[Offer]] = {
+    db.run(tableQ.result)
+  }
+
+  def insert(obj: Offer): Future[Long] = {
+    db.run(tableQ returning tableQ.map(_.id) += obj)
+  }
+
+
+  def byId(id: Long): Future[Option[Offer]] = {
+    db.run(tableQ.filter(_.id === id).result.headOption)
+  }
+
+  @Singleton
+  class ProductDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+    import dbConfig.driver.api._
+    import dbConfig.db
+
+    protected val tableQ = SlickTables.productsTableQ
+
+    def all: Future[Seq[Product]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: Product): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[Product]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
+  }
+
+  @Singleton
+  class ProductTypeDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+    import dbConfig.driver.api._
+    import dbConfig.db
+
+    protected val tableQ = SlickTables.productTypesTableQ
+
+    def all: Future[Seq[ProductType]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: ProductType): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[ProductType]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
+  }
+
+  @Singleton
+  class TransactionDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+    import dbConfig.driver.api._
+    import dbConfig.db
+
+    protected val tableQ = SlickTables.transactionsTableQ
+
+    def all: Future[Seq[Transaction]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: Transaction): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[Transaction]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
+  }
+
 
 }
