@@ -1,3 +1,4 @@
 package models.entities
 
-case class Offer(id: Long, offGood: Long, offAmount: Long, wantedGood: Long, wantedAmount: Long) extends BaseEntity
+
+case class Offer(id: Long, offUserId: Long, offProductId: Long, offAmount:Long, wantedUserId: Long, wantedProductId: Long ,wantedAmount: Long) extends BaseEntity
