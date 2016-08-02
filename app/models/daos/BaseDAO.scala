@@ -72,74 +72,74 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
   }
 
 }
-@Singleton
-class UserDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
+  @Singleton
+  class UserDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-  import dbConfig.driver.api._
-  import dbConfig.db
+    import dbConfig.driver.api._
+    import dbConfig.db
 
-  protected val tableQ = SlickTables.usersTableQ
+    protected val tableQ = SlickTables.usersTableQ
 
-  def all: Future[Seq[User]] = {
-    db.run(tableQ.result)
+    def all: Future[Seq[User]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: User): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[User]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
   }
 
-  def insert(obj: User): Future[Long] = {
-    db.run(tableQ returning tableQ.map(_.id) += obj)
+  @Singleton
+  class MarketDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+    import dbConfig.driver.api._
+    import dbConfig.db
+
+    protected val tableQ = SlickTables.marketsTableQ
+
+    def all: Future[Seq[Market]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: Market): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[Market]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
   }
 
+  @Singleton
+  class OfferDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+    val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-  def byId(id: Long): Future[Option[User]] = {
-    db.run(tableQ.filter(_.id === id).result.headOption)
+    import dbConfig.driver.api._
+    import dbConfig.db
+
+    protected val tableQ = SlickTables.offersTableQ
+
+    def all: Future[Seq[Offer]] = {
+      db.run(tableQ.result)
+    }
+
+    def insert(obj: Offer): Future[Long] = {
+      db.run(tableQ returning tableQ.map(_.id) += obj)
+    }
+
+
+    def byId(id: Long): Future[Option[Offer]] = {
+      db.run(tableQ.filter(_.id === id).result.headOption)
+    }
   }
-}
-
-@Singleton
-class MarketDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-
-  import dbConfig.driver.api._
-  import dbConfig.db
-
-  protected val tableQ = SlickTables.marketsTableQ
-
-  def all: Future[Seq[Market]] = {
-    db.run(tableQ.result)
-  }
-
-  def insert(obj: Market): Future[Long] = {
-    db.run(tableQ returning tableQ.map(_.id) += obj)
-  }
-
-
-  def byId(id: Long): Future[Option[Market]] = {
-    db.run(tableQ.filter(_.id === id).result.headOption)
-  }
-}
-
-@Singleton
-class OfferDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-
-  import dbConfig.driver.api._
-  import dbConfig.db
-
-  protected val tableQ = SlickTables.offersTableQ
-
-  def all: Future[Seq[Offer]] = {
-    db.run(tableQ.result)
-  }
-
-  def insert(obj: Offer): Future[Long] = {
-    db.run(tableQ returning tableQ.map(_.id) += obj)
-  }
-
-
-  def byId(id: Long): Future[Option[Offer]] = {
-    db.run(tableQ.filter(_.id === id).result.headOption)
-  }
-
   @Singleton
   class ProductDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
     val dbConfig = dbConfigProvider.get[JdbcProfile]
@@ -186,28 +186,29 @@ class OfferDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     }
   }
 
-  @Singleton
-  class TransactionDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-    val dbConfig = dbConfigProvider.get[JdbcProfile]
+@Singleton
+class TransactionDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-    import dbConfig.driver.api._
-    import dbConfig.db
+  import dbConfig.driver.api._
+  import dbConfig.db
 
-    protected val tableQ = SlickTables.transactionsTableQ
+  protected val tableQ = SlickTables.transactionsTableQ
 
-    def all: Future[Seq[Transaction]] = {
-      db.run(tableQ.result)
-    }
+  def all: Future[Seq[Transaction]] = {
+    db.run(tableQ.result)
+  }
 
-    def insert(obj: Transaction): Future[Long] = {
-      db.run(tableQ returning tableQ.map(_.id) += obj)
-    }
-
-
-    def byId(id: Long): Future[Option[Transaction]] = {
-      db.run(tableQ.filter(_.id === id).result.headOption)
-    }
+  def insert(obj: Transaction): Future[Long] = {
+    db.run(tableQ returning tableQ.map(_.id) += obj)
   }
 
 
+  def byId(id: Long): Future[Option[Transaction]] = {
+    db.run(tableQ.filter(_.id === id).result.headOption)
+  }
 }
+
+
+
+
