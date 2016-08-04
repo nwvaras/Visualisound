@@ -106,19 +106,18 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
     protected val tableTransaction = SlickTables.transactionsTableQ
     protected val tableProduct = SlickTables.productsTableQ
 
-    def completeTransaction(product: Product, product2: Product, transaction: Transaction, offer: Offer): Future[Unit] ={
+    def completeTransaction(product: Product, product2: Product, transaction: Transaction, offer: Offer): Future[Unit] = {
       val dbAction = (
         for {
           product1 <- tableProduct.update(product)
           product2 <- tableProduct.update(product2)
           offer <- tableOffer.filter(_.id.inSet(Seq(offer.id))).delete
           transaction <- tableTransaction returning tableTransaction.map(_.id) += transaction
-        } yield()
+        } yield ()
         ).transactionally
 
       db.run(dbAction)
     }
-
   }
 
 
@@ -188,9 +187,7 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
     def byId(id: Long): Future[Option[Product]] = {
       db.run(tableQ.filter(_.id === id).result.headOption)
     }
-    def updateById(id: Long): Future[Int] = {
-      db.run(tableQ.filter(_.id === id).
-    }
+
 
   }
 

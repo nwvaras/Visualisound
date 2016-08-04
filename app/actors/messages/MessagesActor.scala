@@ -16,5 +16,6 @@ object MessagesActor {
     val amount = offer.wantedAmount
     val productId = offer.wantedProductId
   }
+  case class GetAllOffers()
 
 }
