@@ -2,9 +2,9 @@ package controllers
 
 import javax.inject._
 
-import models.daos.OfferDAO.ProductDAO
+
 import models.daos._
-import models.entities.Supplier
+import models.entities.{Market, Supplier}
 import models.persistence.SlickTables.SuppliersTable
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc._

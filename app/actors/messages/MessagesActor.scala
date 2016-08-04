@@ -12,5 +12,9 @@ object MessagesActor {
   case class WantedQuantityOK(actorRef: ActorRef,productInterchange: TakeOffer)
   case class TransactionSuccessfully()
   case class TransactionError()
+  case class Petition(userId: Long,otherProductId: Long, offer: Offer){
+    val amount = offer.wantedAmount
+    val productId = offer.wantedProductId
+  }
 
 }

@@ -50,6 +50,8 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   class OffersTable(tag: Tag) extends BaseTable[Offer](tag, "offers") {
     def offUserId = column[Long]("off_user_id")
     def offUser = foreignKey("wanted_user_k", offUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    def marketId = column[Long]("market_id")
+    def market = foreignKey("market_k", marketId, marketsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offProductId = column[Long]("off_product_id")
     def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offAmount = column[Long]("off_amount")
@@ -59,7 +61,7 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
     def wantedProduct = foreignKey("wanted_product_k", wantedProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def wantedAmount = column[Long]("wanted_amount")
 
-    def * = (id, offUserId,offProductId, offAmount,wantedUserId, wantedProductId, wantedAmount,createdAt,updatedAt) <> (Offer.tupled, Offer.unapply)
+    def * = (id, marketId,offUserId,offProductId, offAmount,wantedUserId, wantedProductId, wantedAmount,createdAt,updatedAt) <> (Offer.tupled, Offer.unapply)
   }
   val offersTableQ : TableQuery[OffersTable] = TableQuery[OffersTable]
   ////////////////////////////////////////////////////////////////
@@ -76,8 +78,6 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
 
   class TransactionsTable(tag: Tag) extends BaseTable[Transaction](tag, "transactions") {
     def desc = column[String]("desc")
-    def offUserId = column[Long]("off_user_id")
-    def offUser = foreignKey("wanted_user_k", offUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offProductId = column[Long]("off_product_id")
     def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offAmount = column[Long]("off_amount")
@@ -91,7 +91,7 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
 
 
 
-    def * = (id, desc,offUserId, offProductId, offAmount, offMarginal,wantedUserId, wantedProductId,wantedAmount,wantedMarginal,createdAt,updatedAt) <> (Transaction.tupled, Transaction.unapply)
+    def * = (id, desc, offProductId, offAmount, offMarginal,wantedUserId, wantedProductId,wantedAmount,wantedMarginal,createdAt,updatedAt) <> (Transaction.tupled, Transaction.unapply)
   }
   val transactionsTableQ : TableQuery[TransactionsTable] = TableQuery[TransactionsTable]
 

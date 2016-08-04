@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 import models.daos.{AbstractBaseDAO, BaseDAO}
-import models.entities.Supplier
+import models.entities.{Market, Supplier}
 import models.persistence.SlickTables.SuppliersTable
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
@@ -29,6 +29,7 @@ class SuppliersController @Inject()(suppliersDAO : AbstractBaseDAO[SuppliersTabl
         for {
           name <- (request.body \ "name").asOpt[String]
           desc <- (request.body \ "desc").asOpt[String]
+
         } yield {
           suppliersDAO.insert(Supplier(0, name, desc)) map { n => Ok("Id of Supplier Added : " + n) }
         }
