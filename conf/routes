@@ -8,3 +8,7 @@ POST    /supplier                    controllers.SuppliersController.insertSuppl
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET /test               controllers.SuppliersController.test
+GET /test2               controllers.SuppliersController.test2
+GET /run controllers.SuppliersController.run
+GET /drop controllers.SuppliersController.drop

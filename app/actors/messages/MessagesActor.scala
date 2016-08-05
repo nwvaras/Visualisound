@@ -10,12 +10,17 @@ object MessagesActor {
   case class TakeOffer(userId: Long, offerId: Long)
   case class OffQuantityOK(actorRef: ActorRef,productInterchange: TakeOffer)
   case class WantedQuantityOK(actorRef: ActorRef,productInterchange: TakeOffer)
-  case class TransactionSuccessfully()
-  case class TransactionError()
+  trait TransactionCompleted{
+    val userId: Long
+  }
+  case class TransactionSuccessfully(val userId: Long) extends TransactionCompleted
+  case class TransactionError(val userId: Long)
   case class Petition(userId: Long,otherProductId: Long, offer: Offer){
     val amount = offer.wantedAmount
     val productId = offer.wantedProductId
   }
   case class GetAllOffers()
+  case class DeadUser(userId: Long)
+  case class TimeOutMsg()
 
 }

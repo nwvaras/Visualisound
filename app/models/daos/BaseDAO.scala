@@ -94,31 +94,7 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
       db.run(tableQ.filter(_.id === id).result.headOption)
     }
   }
-  @Singleton
-  class MultipleDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-    val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-    import dbConfig.driver.api._
-    import dbConfig.db
-
-    protected val tableMarket = SlickTables.marketsTableQ
-    protected val tableOffer = SlickTables.offersTableQ
-    protected val tableTransaction = SlickTables.transactionsTableQ
-    protected val tableProduct = SlickTables.productsTableQ
-
-    def completeTransaction(product: Product, product2: Product, transaction: Transaction, offer: Offer): Future[Unit] = {
-      val dbAction = (
-        for {
-          product1 <- tableProduct.update(product)
-          product2 <- tableProduct.update(product2)
-          offer <- tableOffer.filter(_.id.inSet(Seq(offer.id))).delete
-          transaction <- tableTransaction returning tableTransaction.map(_.id) += transaction
-        } yield ()
-        ).transactionally
-
-      db.run(dbAction)
-    }
-  }
 
 
   @Singleton
@@ -234,6 +210,66 @@ class TransactionDAO @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 
   def byId(id: Long): Future[Option[Transaction]] = {
     db.run(tableQ.filter(_.id === id).result.headOption)
+  }
+}
+
+@Singleton
+class MultipleDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig.driver.api._
+  import dbConfig.db
+
+  protected val tableMarket = SlickTables.marketsTableQ
+  protected val tableOffer = SlickTables.offersTableQ
+  protected val tableTransaction = SlickTables.transactionsTableQ
+  protected val tableProductType = SlickTables.productTypesTableQ
+  protected val tableUser = SlickTables.usersTableQ
+  protected val tableProduct = SlickTables.productsTableQ
+  lazy val schema = tableMarket.schema  ++ tableProductType.schema ++ tableUser.schema++ tableProduct.schema++tableOffer.schema++ tableTransaction.schema
+  def holi() ={
+    db.run(DBIO.seq(schema.create))/*,tableUser returning tableUser.map(_.id) += User(0, "holi1", "holo", "hola", "he", 0, null, null),
+   tableUser returning tableUser.map(_.id) += User(0, "holi2", "holo", "hola", "he", 0, null, null),
+    tableMarket returning tableMarket.map(_.id) += Market(0, "test1", "test", null, null),
+   tableMarket returning tableMarket.map(_.id) += Market(0, "test2", "test", null, null),
+    tableProductType returning tableProductType.map(_.id) += ProductType(0, "test", null, null),
+    tableProduct returning tableProduct.map(_.id) += Product(0, 1, 1, 200, 1, 1, null, null),
+    tableOffer returning tableOffer.map(_.id) += Offer(0, 1, 1, 200, 1, 2, 200, null, null))*/
+
+  }
+  def holu()= {
+    db.run(for {
+        p1 <- tableUser returning tableUser.map(_.id) += User(0, "holi1", "holo", "hola", "he", 0, null, null)
+        p2 <- tableUser returning tableUser.map(_.id) += User(0, "holi2", "holo", "hola", "he", 0, null, null)
+        p3 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test1", "test", null, null)
+        p4 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test2", "test", null, null)
+        p5 <- tableProductType returning tableProductType.map(_.id) += ProductType(0, "test", null, null)
+        p6 <- tableProduct returning tableProduct.map(_.id) += Product(0, 1, 1, 200, 1, 1, null, null)
+        p7 <- tableOffer returning tableOffer.map(_.id) += Offer(0, 1, 1, 200, 1, 2, 200, null, null)
+        p8 <- tableOffer.result
+      } yield ())
+  }
+  def run() ={
+    schema.create.statements.toString()
+
+  }
+  def drop ()={
+    schema.drop.statements.toString()
+  }
+
+
+
+  def completeTransaction(product: Product, product2: Product, transaction: Transaction, offer: Offer): Future[Unit] = {
+    val dbAction = (
+      for {
+        product1 <- tableProduct.update(product)
+        product2 <- tableProduct.update(product2)
+        offer <- tableOffer.filter(_.id.inSet(Seq(offer.id))).delete
+        transaction <- tableTransaction returning tableTransaction.map(_.id) += transaction
+      } yield ()
+      ).transactionally
+
+    db.run(dbAction)
   }
 }
 

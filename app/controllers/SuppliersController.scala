@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.daos.{AbstractBaseDAO, BaseDAO}
+import models.daos.{MarketDAO, MultipleDAO, AbstractBaseDAO, BaseDAO}
 import models.entities.{Market, Supplier}
 import models.persistence.SlickTables.SuppliersTable
 import play.api.libs.json.{Json, Writes}
@@ -9,7 +9,7 @@ import play.api.mvc._
 import scala.concurrent.{Future, ExecutionContext}
 
 @Singleton
-class SuppliersController @Inject()(suppliersDAO : AbstractBaseDAO[SuppliersTable,Supplier])(implicit exec: ExecutionContext) extends Controller {
+class SuppliersController @Inject()(multipleDAO: MultipleDAO,suppliersDAO : AbstractBaseDAO[SuppliersTable,Supplier])(implicit exec: ExecutionContext) extends Controller {
 
   implicit val supplierWrites = new Writes[Supplier] {
     def writes(sup: Supplier) = Json.obj(
@@ -22,7 +22,14 @@ class SuppliersController @Inject()(suppliersDAO : AbstractBaseDAO[SuppliersTabl
   def supplier(id : Long) = Action.async {
     suppliersDAO.findById(id) map { sup => sup.fold(NoContent)(sup => Ok(Json.toJson(sup))) }
   }
-
+  def test ()=Action.async{
+    multipleDAO.holi  map { re => Ok( re.toString())}
+  }
+  def test2=Action.async{
+    multipleDAO.holu  map { re => Ok( re.toString())}
+  }
+  def run= Action{ Ok(multipleDAO.run)}
+  def drop= Action{Ok(multipleDAO.drop)}
   def insertSupplier = Action.async(parse.json) {
     request => {
       {
