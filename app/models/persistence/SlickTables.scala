@@ -15,8 +15,7 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   import dbConfig.driver.api._
   abstract class BaseTable[T](tag: Tag, name: String) extends Table[T](tag, name) {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def createdAt = column[Timestamp]("created", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
-    def updatedAt = column[Timestamp]("updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
+    def created = column[java.sql.Timestamp]("created")
 
   }
 
@@ -25,7 +24,7 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   class SuppliersTable(tag: Tag) extends BaseTable[Supplier](tag, "suppliers") {
     def name = column[String]("name")
     def desc = column[String]("desc")
-    def * = (id, name, desc) <> (Supplier.tupled, Supplier.unapply)
+    def * = (id, name, desc,created) <> (Supplier.tupled, Supplier.unapply)
   }
   val suppliersTableQ : TableQuery[SuppliersTable] = TableQuery[SuppliersTable]
   //////////////////////////////////////////////////////////////
@@ -37,10 +36,11 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
     def password = column[String]("password")
     def userType = column[String]("user_type")
     def marketId = column[Long]("market_id")
-    def market = foreignKey("market_k", marketId, marketsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    def uniqueUsername =index("unique_uname", username, unique = true)
+    //def market = foreignKey("market_k", marketId, marketsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
 
 
-    def * = (id, username, mail,password,userType,marketId,createdAt,updatedAt) <> (User.tupled, User.unapply)
+    def * = (id, username, mail,password,userType,marketId,created) <> (User.tupled, User.unapply)
   }
   val usersTableQ : TableQuery[UsersTable] = TableQuery[UsersTable]
 
@@ -50,17 +50,17 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   class OffersTable(tag: Tag) extends BaseTable[Offer](tag, "offers") {
 
     def marketId = column[Long]("market_id")
-    def market = foreignKey("market_k", marketId, marketsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    // def market = foreignKey("market_k", marketId, marketsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offProductId = column[Long]("off_product_id")
-    def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    //def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offAmount = column[Long]("off_amount")
     def wantedUserId = column[Long]("wanted_user_id")
-    def wantedUser = foreignKey("wanted_user_k", wantedUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    // def wantedUser = foreignKey("wanted_user_k", wantedUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def wantedProductId = column[Long]("wanted_product_id")
-    def wantedProduct = foreignKey("wanted_product_k", wantedProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    //  def wantedProduct = foreignKey("wanted_product_k", wantedProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def wantedAmount = column[Long]("wanted_amount")
 
-    def * = (id, marketId,offProductId, offAmount,wantedUserId, wantedProductId, wantedAmount,createdAt,updatedAt) <> (Offer.tupled, Offer.unapply)
+    def * = (id, marketId,offProductId, offAmount,wantedUserId, wantedProductId, wantedAmount,created) <> (Offer.tupled, Offer.unapply)
   }
   val offersTableQ : TableQuery[OffersTable] = TableQuery[OffersTable]
   ////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   class MarketsTable(tag: Tag) extends BaseTable[Market](tag, "markets") {
     def name= column[String]("name")
     def desc = column[String]("desc")
-    def * = (id,name, desc,createdAt,updatedAt) <> (Market.tupled, Market.unapply)
+    def * = (id,name, desc,created) <> (Market.tupled, Market.unapply)
   }
   val marketsTableQ : TableQuery[MarketsTable] = TableQuery[MarketsTable]
   ///////////////////////////////////////////////////////////////////
@@ -78,21 +78,21 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   class TransactionsTable(tag: Tag) extends BaseTable[Transaction](tag, "transactions") {
     def desc = column[String]("desc")
     def offUserId = column[Long]("off_user_id")
-    def offUser = foreignKey("wanted_user_k", offUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    // def offUser = foreignKey("wanted_user_k", offUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offProductId = column[Long]("off_product_id")
-    def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    // def offProduct = foreignKey("off_product_k", offProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def offAmount = column[Long]("off_amount")
     def offMarginal = column[Double]("off_marginal")
     def wantedUserId = column[Long]("wanted_user_id")
-    def wantedUser = foreignKey("wanted_user_k", wantedUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    // def wantedUser = foreignKey("wanted_user_k", wantedUserId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def wantedProductId = column[Long]("wanted_product_id")
-    def wantedProduct = foreignKey("wanted_product_k", wantedProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    //  def wantedProduct = foreignKey("wanted_product_k", wantedProductId, productsTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def wantedAmount = column[Long]("wanted_amount")
     def wantedMarginal = column[Double]("wanted_marginal")
 
 
 
-    def * = (id, desc, offUserId, offProductId, offAmount, offMarginal,wantedUserId, wantedProductId,wantedAmount,wantedMarginal,createdAt,updatedAt) <> (Transaction.tupled, Transaction.unapply)
+    def * = (id, desc, offUserId, offProductId, offAmount, offMarginal,wantedUserId, wantedProductId,wantedAmount,wantedMarginal,created) <> (Transaction.tupled, Transaction.unapply)
   }
   val transactionsTableQ : TableQuery[TransactionsTable] = TableQuery[TransactionsTable]
 
@@ -102,21 +102,21 @@ object SlickTables extends HasDatabaseConfig[JdbcProfile] {
   //
   class ProductsTable(tag: Tag) extends BaseTable[Product](tag, "products") {
     def userId = column[Long]("wanted_user_id")
-    def user = foreignKey("wanted_user_k", userId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+    //  def user = foreignKey("wanted_user_k", userId, usersTableQ)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
     def productTypeId = column[Long]("product_type_id")
     def productQuantity = column[Long]("product_quantity")
     def productConstant = column[Double]("product_constant_")
     def productExponential = column[Double]("product_exponential")
 
-    def * = (id,userId, productTypeId, productQuantity,productConstant,productExponential,createdAt,updatedAt) <> (Product.tupled, Product.unapply)
+    def * = (id,userId, productTypeId, productQuantity,productConstant,productExponential,created) <> (Product.tupled, Product.unapply)
   }
   val productsTableQ : TableQuery[ProductsTable] = TableQuery[ProductsTable]
-//////////////////////////////
+  //////////////////////////////
   ///  /case class ProductType(id: Long, name: String) extends BaseEntity
   /////////
   class ProductTypesTable(tag: Tag) extends BaseTable[ProductType](tag, "product_types") {
     def name = column[String]("name")
-    def * = (id, name,createdAt,updatedAt) <> (ProductType.tupled, ProductType.unapply)
+    def * = (id, name,created) <> (ProductType.tupled, ProductType.unapply)
   }
   val productTypesTableQ : TableQuery[ProductTypesTable] = TableQuery[ProductTypesTable]
 }

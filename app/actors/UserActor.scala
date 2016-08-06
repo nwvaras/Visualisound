@@ -50,7 +50,7 @@ class UserActor(market: ActorRef,userId: Long, offerDAO: OfferDAO,productDAO: Pr
     if(product.productQuantity >= p.amount){
             val product1 = product.copy(productQuantity = product.productQuantity - p.amount)
             val product2 = otherProduct.copy(productQuantity = otherProduct.productQuantity - p.offer.offAmount)
-            val newTransaction = Transaction(0,"test",p.userId,p.offer.offProductId,p.offer.offAmount,0.0,this.userId,p.offer.wantedProductId,p.offer.wantedAmount,0.0,null,null)
+            val newTransaction = Transaction(0,"test",p.userId,p.offer.offProductId,p.offer.offAmount,0.0,this.userId,p.offer.wantedProductId,p.offer.wantedAmount,0.0)
             multipleDAO.completeTransaction(product1,product2,newTransaction,p.offer)
       "yep?"
     }

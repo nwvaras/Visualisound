@@ -239,15 +239,18 @@ class MultipleDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
   }
   def holu()= {
     db.run(for {
-        p1 <- tableUser returning tableUser.map(_.id) += User(0, "holi1", "holo", "hola", "he", 0, null, null)
-        p2 <- tableUser returning tableUser.map(_.id) += User(0, "holi2", "holo", "hola", "he", 0, null, null)
-        p3 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test1", "test", null, null)
-        p4 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test2", "test", null, null)
-        p5 <- tableProductType returning tableProductType.map(_.id) += ProductType(0, "test", null, null)
-        p6 <- tableProduct returning tableProduct.map(_.id) += Product(0, 1, 1, 200, 1, 1, null, null)
-        p7 <- tableOffer returning tableOffer.map(_.id) += Offer(0, 1, 1, 200, 1, 2, 200, null, null)
+        p1 <- tableUser returning tableUser.map(_.id) += User(0, "holi1", "holo", "hola", "he", 0)
+        p2 <- tableUser returning tableUser.map(_.id) += User(0, "holi2", "holo", "hola", "he", 0)
+        p3 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test1", "test")
+        p4 <- tableMarket returning tableMarket.map(_.id) += Market(0, "test2", "test")
+        p5 <- tableProductType returning tableProductType.map(_.id) += ProductType(0, "test")
+        p6 <- tableProduct returning tableProduct.map(_.id) += Product(0, 1, 1, 200, 1, 1)
+        p7 <- tableOffer returning tableOffer.map(_.id) += Offer(0, 1, 1, 200, 1, 2, 200)
         p8 <- tableOffer.result
-      } yield ())
+      } yield p8)
+  }
+  def test3()={
+    db.run(tableUser returning tableUser.map(_.id) += User(0, "holi1", "holo", "hola", "he", 0))
   }
   def run() ={
     schema.create.statements.toString()
