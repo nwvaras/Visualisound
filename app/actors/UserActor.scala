@@ -13,10 +13,10 @@ import scala.concurrent.{Future, Await}
 
 object UserActor{
   def props = Props[UserActor]
-  def props(market: ActorRef,userId: Long,offerDAO: OfferDAO,productDAO: ProductDAO,transactionDAO: TransactionDAO) =
-    Props(classOf[UserActor],market,userId,offerDAO,productDAO,transactionDAO)
+  def props(userId: Long,offerDAO: OfferDAO,productDAO: ProductDAO,transactionDAO: TransactionDAO,multipleDAO: MultipleDAO) =
+    Props(classOf[UserActor],userId,offerDAO,productDAO,transactionDAO,multipleDAO)
 }
-class UserActor(market: ActorRef,userId: Long, offerDAO: OfferDAO,productDAO: ProductDAO,transactionDAO: TransactionDAO, multipleDAO: MultipleDAO) extends Actor with Stash{
+class UserActor(userId: Long, offerDAO: OfferDAO,productDAO: ProductDAO,transactionDAO: TransactionDAO, multipleDAO: MultipleDAO) extends Actor with Stash{
   import context._
   println(self.path)
   var offerSender: (Long,ActorRef) = (0,null)

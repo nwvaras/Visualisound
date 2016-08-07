@@ -93,6 +93,9 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
     def byId(id: Long): Future[Option[User]] = {
       db.run(tableQ.filter(_.id === id).result.headOption)
     }
+    def byMarket(marketId: Long): Future[Seq[User]] = {
+      db.run(tableQ.filter(_.marketId === marketId).result)
+    }
   }
 
 
@@ -117,6 +120,9 @@ abstract class  BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBa
 
     def byId(id: Long): Future[Option[Market]] = {
       db.run(tableQ.filter(_.id === id).result.headOption)
+    }
+    def insert(rows : Seq[Market]): Future[Seq[Long]] ={
+      db.run(tableQ returning tableQ.map(_.id) ++= rows.filter(_.isValid))
     }
   }
 

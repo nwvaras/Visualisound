@@ -13,6 +13,10 @@ GET /test2               controllers.SuppliersController.test2
 GET /test3              controllers.SuppliersController.test3
 GET /run controllers.SuppliersController.run
 GET /drop controllers.SuppliersController.drop
-GET /usertest controllers.SuppliersController.addTestUser
+GET /usertest controllers.MarketsController.addTestUser
 GET /markettest controllers.SuppliersController.addTestMarket
 GET /getusers controllers.SuppliersController.getTestUser
+GET /markets controllers.MarketsController.getMarkets
+GET /testmarkets controllers.MarketsController.createTestMarkets
+GET /addMarket/:name/:desc controllers.MarketsController.addMarket(name: String, desc: String)
+GET /init   controllers.MarketsController.initGetMarkets
