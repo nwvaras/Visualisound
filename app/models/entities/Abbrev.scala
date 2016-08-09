@@ -1,0 +1,58 @@
+package models.entities
+
+/**
+ * Created by Nicolas on 09-08-2016.
+ */
+case class Abbrev(//NDB_No :Option[String],
+                  Shrt_Desc :Option[String],
+                  Water :Option[Double],
+                  Energ_Kcal :Option[Int],
+                  Protein :Option[Double],
+                  Lipid_Tot :Option[Double],
+                  //Ash :Option[Double],
+                  Carbohydrt :Option[Double],
+                  Fiber_TD :Option[Double],
+                  Sugar_Tot :Option[Double],
+                  Calcium :Option[Int],
+                  Iron :Option[Double],
+                  Magnesium :Option[Double],
+                  Phosphorus :Option[Int],
+                  Potassium :Option[Int],
+                  Sodium :Option[Int],
+                  /*Zinc :Option[Double],
+                  Copper :Option[Double],
+                  Manganese :Option[Double],
+                  Selenium :Option[Double],*/
+                  Vit_C :Option[Double],
+                  /* Thiamin :Option[Double],
+                   Riboflavin :Option[Double],
+                   Niacin :Option[Double],
+                   Panto_Acid :Option[Double],*/
+                  Vit_B6 :Option[Double],
+                  /* Folate_Tot :Option[Double],
+                   Folic_Acid :Option[Double],
+                   Food_Folate :Option[Double],
+                   Folate_DFE :Option[Double],
+                   Choline_Tot :Option[Double],
+                   Vit_B12d :Option[Double],
+                   Vit_A_IU :Option[Int],
+                   Vit_A_RAE :Option[Double],
+                   Retinol :Option[Double],
+                   Alpha_Carot :Option[Double],
+                   Beta_Carot:Option[Double],
+                   Beta_Crypt :Option[Double],
+                   Lycopene :Option[Double],
+                   LutZea :Option[Double],
+                   Vit_E :Option[Double],*/
+                  //Vit_Dd :Option[Double],
+                  /* Vit_D_IU :Option[Double],
+                   Vit_Kd :Option[Double],*/
+                  FA_Sat :Option[Double],
+                  FA_Mono :Option[Double],
+                  FA_Poly :Option[Double],
+                  Cholestrl :Option[Int]/*,
+                  GmWt_1 :Option[Double],
+                  GmWt_Desc1 :Option[String],
+                  GmWt_2 :Option[Double],
+                  GmWt_Desc2 :Option[String],
+                  Refuse_Pct :Option[Int]*/)

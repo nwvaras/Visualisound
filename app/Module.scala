@@ -3,9 +3,9 @@ import com.google.inject.{Provides, AbstractModule}
 import java.time.Clock
 
 import models.daos.{AbstractBaseDAO, BaseDAO}
-import models.entities.Supplier
+import models.entities.{Abbrev, Supplier}
 import models.persistence.SlickTables
-import models.persistence.SlickTables.SuppliersTable
+import models.persistence.SlickTables.{AbbrevTable, SuppliersTable}
 
 
 /**

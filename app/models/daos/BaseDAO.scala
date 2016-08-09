@@ -1,6 +1,8 @@
 package models.daos
 
-import models.entities.{Supplier, BaseEntity}
+import javax.inject.{Inject, Singleton}
+
+import models.entities.{Abbrev, BaseEntity}
 import models.persistence.SlickTables
 import models.persistence.SlickTables.{SuppliersTable, BaseTable}
 import play.api.Play
@@ -69,4 +71,26 @@ abstract class BaseDAO[T <: BaseTable[A], A <: BaseEntity]() extends AbstractBas
     db.run(tableQ.withFilter(f).delete)
   }
 
+
+}
+
+@Singleton
+class AbbrevDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig.driver.api._
+  import dbConfig.db
+
+  protected val tableQ = SlickTables.abbrevTableQ
+
+  def all: Future[Seq[Abbrev]] = {
+    db.run(tableQ.result)
+  }
+  def findByName(name : String): Future[Option[Abbrev]] = {
+    db.run(tableQ.filter(_.Shrt_Desc === name.toUpperCase).result.headOption)
+  }
+
+  def findByLikeness(str: String,limit:Int): Future[Seq[Abbrev]] ={
+    db.run(tableQ.filter(_.Shrt_Desc like s"%$str%" ).take(limit).result)
+  }
 }
