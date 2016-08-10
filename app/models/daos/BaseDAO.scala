@@ -87,10 +87,14 @@ class AbbrevDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
     db.run(tableQ.result)
   }
   def findByName(name : String): Future[Option[Abbrev]] = {
-    db.run(tableQ.filter(_.Shrt_Desc === name.toUpperCase).result.headOption)
+    db.run(tableQ.filter(_.Shrt_Desc.toLowerCase === name.toLowerCase).result.headOption)
   }
 
   def findByLikeness(str: String,limit:Int): Future[Seq[Abbrev]] ={
-    db.run(tableQ.filter(_.Shrt_Desc like s"%$str%" ).take(limit).result)
+    var newstr = str.toLowerCase()
+    var q = tableQ.filter(_.Shrt_Desc.isDefined)
+    str.split(" ").foreach{x =>
+      q = q.filter(_.Shrt_Desc.toLowerCase like s"%$x%")}
+    db.run(q.take(limit).result)
   }
 }
